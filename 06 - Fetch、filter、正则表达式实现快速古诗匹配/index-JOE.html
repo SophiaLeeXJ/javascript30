@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Fetch、filter、正则表达式实现快速古诗匹配</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <form class="search-form">
+    <input type="text" class="search" placeholder="诗人名字，关键字">
+    <ul class="suggestions">
+      <li>输入词句，找一首诗</li>
+      <li></li>
+    </ul>
+  </form>
+  
+
+  <script type="text/javascript">
+    
+    const myData = [];
+    const endpoint =
+      'https://gist.githubusercontent.com/liyuechun/f00bb31fb8f46ee0a283a4d182f691b4/raw/3ea4b427917048cdc596b38b67b5ed664605b76d/TangPoetry.json';
+
+    fetch(endpoint)
+      .then( res => {
+        //console.log(res);
+        return res.json();
+      })
+      .then( data => {
+        //console.log(data);
+        myData.push(...data);
+        //console.log(myData);
+      });
+
+    function findMatches(word,data){
+      return data.filter( item =>{
+        const regex = new RegExp(word,'gi');
+        const author = item.detail_author.join('');
+        return item.detail_text.match(regex) || item.title.match(regex) || author.match(regex);
+      });
+    }
+
+    function disPlayMatches(){
+      if(this.value==''){
+        return ;
+      }
+      const matches = findMatches(this.value,myData);
+
+      const regex = new RegExp(this.value,'gi');
+
+      const rep = `<span class="hl">${ this.value }</span>`;
+
+
+      const html = matches.map( item =>{
+
+        const text = item.detail_text.replace(regex,rep);
+        const title = item.title.replace(regex,rep);
+        const detail_author = ""+item.detail_author[0].replace(regex,rep);
+
+       return `
+              <li>
+                <span class="poet">${ text }</span>
+                <span class="title">${ title } - ${ detail_author }</span>
+              </li>
+        `;
+
+      }).join('');
+      suggestions.innerHTML = html;
+    }
+
+    const search = document.querySelector('.search');
+    const suggestions = document.querySelector('.suggestions');
+
+    search.addEventListener('change',disPlayMatches);
+    search.addEventListener('keyup',disPlayMatches);
+    
+  </script>
+</body>
+
+</html>
