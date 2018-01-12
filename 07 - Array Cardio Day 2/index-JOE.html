@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Array Cardio 💪💪</title>
+</head>
+<body>
+  <p><em>Psst: have a look at the JavaScript Console</em> 💁</p>
+  <script>
+    // ## Array Cardio Day 2
+    const people = [
+      { name: 'Wes', year: 1988 },
+      { name: 'Kait', year: 1986 },
+      { name: 'Irv', year: 1970 },
+      { name: 'Lux', year: 2015 }
+    ];
+
+    const comments = [
+      { text: 'Love this!', id: 523423 },
+      { text: 'Super good', id: 823423 },
+      { text: 'You are the best', id: 2039842 },
+      { text: 'Ramen is my fav food ever', id: 123523 },
+      { text: 'Nice Nice Nice!', id: 542328 }
+    ];
+
+    function disPlay(ques,arr){
+      console.log(ques);
+      if(arr instanceof Array || arr instanceof Object){
+        console.table(arr);
+      }
+      else{
+        console.log(arr);
+      }
+
+    }
+
+    disPlay(
+      "1.is at least one person 19 or older?",
+      people.some( item =>  (new Date().getFullYear-item.year) >= 19)
+    )
+
+    disPlay(
+      "2.is everyone 19 or older?",
+      people.every( item =>  (new Date().getFullYear-item.year) >= 19)
+    )
+
+    disPlay(
+      "3.find the comment with the ID of 823423",
+      comments.findIndex( item => item.id === 823423)
+    )
+
+    function deleteItem(id,arr){
+        let newArr = [];
+        for(let i=0;i<arr.length;i++){
+          if(id !== arr[i].id){
+            newArr.push(arr[i]);
+          }
+        }
+
+        return newArr;
+    }
+
+    disPlay(
+      "4.delete the comment with the ID of 823423",
+      deleteItem(823423,comments)
+    )
+
+
+  </script>
+</body>
+</html>
