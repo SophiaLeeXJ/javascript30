@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 Canvas</title>
+  <style type="text/css">
+    canvas {
+      border: 1px solid black;
+      overflow: hidden;
+    }
+  </style>
+</head>
+
+<body">
+  <canvas id="main" width="300" height="300"></canvas>
+    <script type="text/javascript">
+    let canvas = document.getElementById('main');
+    let control = {
+      isDrawing:false,
+      lastX : 0,
+      lastY : 0,
+      x : 0,
+      y : 0,
+      hue : 0,
+      direction : true,
+    };
+    let ctx = null;
+
+    function start() {
+      if(canvas.getContext){
+        ctx = canvas.getContext('2d');
+        init();
+      }else{
+        console.log("您的浏览器不支持canvas");
+        return ;
+      }
+    }
+
+    function init(){
+
+      //初始化画布
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      ctx.lineWidth = 90;
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.strokeStyle = "#f00";
+      ctx.fillStyle = "#f00";
+
+    }
+
+    function draw(e){
+      if(!ctx)return;
+      if(!control.isDrawing) return;
+
+      control.x = e.offsetX;
+      control.y = e.offsetY;
+
+      //彩虹效
+      ctx.strokeStyle = `hsl(${ control.hue }, 90%, 50%)`;
+      if (control.hue >= 360) control.hue = 0;
+      control.hue++;
+
+       //   控制笔触大小
+      if (ctx.lineWidth > 120 || ctx.lineWidth < 10) {
+        control.direction = !control.direction;
+      }
+      if (control.direction) {
+        ctx.lineWidth++;
+      } else {
+        ctx.lineWidth--;
+      }
+      console.log("75");
+      //    控制绘制路径
+      ctx.beginPath();
+
+      ctx.moveTo(control.lastX, control.lastY);
+      ctx.lineTo(control.x, control.y);
+      ctx.stroke();
+
+      //es6 数组解构
+      [control.lastX, control.lastY] = [control.x, control.y];
+
+    }
+    start();
+    canvas.addEventListener('mousedown', (e) => {
+      control.isDrawing = true;
+      [control.lastX, control.lastY] = [control.x, control.y];
+    });
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', () => isDrawing = false);
+    canvas.addEventListener('mouseout', () => isDrawing = false);
+
+
+    // console.log(canvas);
+    // console.log(ctx);
+    // console.log(control);
+
+  </script>
+</body>
+
+</html>
