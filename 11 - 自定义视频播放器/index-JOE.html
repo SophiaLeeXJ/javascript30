@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>HTML Video Player</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div class="player">
+    <video class="player__video viewer" src="Shape of You.mp4"></video>
+
+    <div class="player__controls">
+      <div class="progress">
+        <div class="progress__filled"></div>
+      </div>
+      <button class="player__button toggle" title="toggle Play">►</button>
+      <input type="range" name="volume" class="player__slider" min="0" max="1" step="0.05" value="1">
+      <input type="range" name="playbackRate" class="player__slider" min="0.5" max="2" step="0.1" value="1">
+      <button data-skip="-10" class="player__button">« 10s</button>
+      <button data-skip="25" class="player__button">25s »</button>
+    </div>
+  </div>
+  <script type="text/javascript">
+
+    const player = document.querySelector('.player');
+    const video = player.querySelector('.viewer');
+    const progress = player.querySelector('.progress');
+    const progressBar = player.querySelector('.progress__filled');
+    const toggle = player.querySelector('.toggle');
+    const skipButtons = player.querySelectorAll('[data-skip]');
+    const ranges = player.querySelectorAll('.player__slider');
+
+    function videoPlay(e){
+      const method = video.paused ? 'play':'pause';
+      video[method]();
+    }
+
+    function handleToggle(){
+      let icon = video.paused ? '►' : '❚ ❚';
+      toggle.textContent = icon;
+    }
+
+    function handlePlayerSlider(e){
+      video[e.target.name] = e.target.value;
+    }
+
+    function handleSkip(e){
+      let skipTime  = parseFloat(this.dataset.skip);
+      video.currentTime +=skipTime;
+    }
+
+    function handleprogressBar(e){
+      let pice  = (e.offsetX / progress.offsetWidth) * video.duration;
+      video.currentTime = pice;
+    }
+
+    function progressBarUpdate(){
+      let portion = parseFloat(video.currentTime / video.duration ) * 100;
+      progressBar.style.flexBasis = `${portion}%`;
+    }
+
+    video.addEventListener('click',videoPlay);
+    video.addEventListener('play',handleToggle);
+    video.addEventListener('pause',handleToggle);
+    video.addEventListener('timeupdate',progressBarUpdate);
+
+    toggle.addEventListener('click',videoPlay);
+    toggle.addEventListener('click',handleToggle);
+
+    let mouseFlag = false;
+    ranges.forEach( item => item.addEventListener('click',handlePlayerSlider));
+    ranges.forEach( item => item.addEventListener('mousedown',() => mouseFlag = true ));
+    ranges.forEach( item => item.addEventListener('mouseup', () => mouseFlag = false ));
+    ranges.forEach( item => item.addEventListener('mousemove',(e) => mouseFlag && handlePlayerSlider(e)));
+
+    skipButtons.forEach( item => item.addEventListener('click',handleSkip));
+
+    let prpgressBarflag = false;
+    progress.addEventListener('click',handleprogressBar);
+    progress.addEventListener('mousedown',() => progressBarflag = true);
+    progress.addEventListener('mouseup',() => progressBarflag = false);
+    progress.addEventListener('mousrmove',(e) => progressBarflag && handleprogressBar(e));
+
+
+
+  </script>
+</body>
+
+</html>
