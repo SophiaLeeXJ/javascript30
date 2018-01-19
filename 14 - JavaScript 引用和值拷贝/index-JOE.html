@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS Reference VS Copy</title>
+</head>
+<body>
+
+  <script>
+    function disPlay(first,second){
+
+        console.log(first,second);
+        
+    }
+    //基本类型的拷贝
+    let age = 100;
+    let age2 = age;
+    disPlay(age,age2);
+    age2 = 200;
+    disPlay(age,age2);
+
+    let str = "hello world";
+    let str2 = str;
+    disPlay(str,str2);
+    str2 = "i love you";
+    disPlay(str,str2);
+
+    //引用类型
+    //数组 浅拷贝
+    const player = ['Wes', 'Sarah', 'Ryan', 'Poppy'];
+    const player2 = player;
+    disPlay(player,player2);
+    player2.push('joe');
+    disPlay(player,player2);
+
+     //数组 深拷贝
+    const player3 = ['Wes', 'Sarah', 'Ryan', 'Poppy'];
+    const player4 = [...player3];
+    player4.push('joe');
+    disPlay(player3,player4);
+
+    const player5 = Array.from(player3);
+    player5.push('joe');
+    disPlay(player3,player5);
+
+    const player6 = [].concat(player3);
+    player6.push('joe');
+    disPlay(player3,player6);
+
+
+    //对象
+    const person = {
+      name: '黎跃春',
+      age: 29
+    };
+
+    // 浅拷贝
+
+    const captain = person;
+    disPlay(person,captain);
+    captain.number = 99;
+    disPlay(person,captain);
+
+    // 深拷贝
+    const person2 = {
+        name:'joe',
+        age:20,
+        own:{
+            qq:'1111',
+            wechat:'2222'
+        }
+    }
+
+    const person3 = Object.assign({},person2);
+    disPlay(person2,person3);
+    person3.name = 'joejoe';
+    disPlay(person2,person3);
+
+    const person4 = JSON.parse(JSON.stringify(person2));
+    disPlay(person2,person4);
+    person4.name = 'joejoe';
+    disPlay(person2,person4);
+
+
+    
+
+
+
+
+
+
+
+  </script>
+
+</body>
+</html>
